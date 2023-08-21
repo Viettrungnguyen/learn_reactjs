@@ -1,61 +1,112 @@
-import { useCallback, useState } from "react";
-import UseMemoHook from "./UseMemoHook";
-import UseReducer from "./UseReducer";
-// import UseMemoTest from "./UseMemo";
-// import UseCallbackTest from "./UseCallback";
+import { useReducer, useRef } from "react";
+// useReducer
+// 1. Init state
 
+const initState = {
+  job: "",
+  jobs: [],
+};
+
+// 2. Actions
+const SET_JOB = "set_job";
+const ADD_JOB = "add_job";
+const DELETE_JOB = "delete-job";
+
+const setJob = (payload) => {
+  return {
+    type: SET_JOB,
+    payload,
+  };
+};
+
+const addJob = (payload) => {
+  return {
+    type: ADD_JOB,
+    payload,
+  };
+};
+
+const deleteJob = (payload) => {
+  return {
+    type: DELETE_JOB,
+    payload,
+  };
+};
+
+// 3. Reducer
+const reducer = (state, action) => {
+  console.log("Action", action);
+  console.log("Prev state", state);
+
+  let newState;
+
+  switch (action.type) {
+    case SET_JOB:
+      newState = {
+        ...state,
+        job: action.payload,
+      };
+      break;
+    case ADD_JOB:
+      newState = {
+        ...state,
+        // job: "", --> sau khi add job thì xoá dữ liệu ở input đi
+        //(ko nên làm theo hướng này vì hàm add chỉ nên add thôi)
+        jobs: [...state.jobs, action.payload],
+      };
+      break;
+    case DELETE_JOB:
+      const newjobs = [...state.jobs];
+      newjobs.splice(action.payload, 1);
+      newState = {
+        ...state,
+        jobs: newjobs,
+      };
+      break;
+    default:
+      throw new Error("Invalid action");
+  }
+  console.log("New state", newState);
+
+  return newState;
+};
+
+// 4. Dispatch
 function App() {
-  // const [show, setShow] = useState(false);
-  // return (
-  //   <div>
-  //     <button onClick={() => setShow(!show)}>Toggle</button>
+  const [state, dispatch] = useReducer(reducer, initState);
+  const { job, jobs } = state;
 
-  //     {/* {show && <Content />} */}
-  //     {show && <UseMemoTest />}
-  //   </div>
-  // );
+  const inputRef = useRef();
 
-  // const [count, setCount] = useState(0);
-  // const [count2, setCount2] = useState(0)
+  const handleSubmit = () => {
+    dispatch(addJob(job));
+    dispatch(setJob("")); // sau khi add job thì xoá job ở input đi
 
-  // const handleIncrease = () => {
-  //   setCount(count + 1);
-  // };
+    inputRef.current.focus();
+  };
 
-  // const handleIncrease = useCallback(() => {
-  //   setCount((prevCount) => prevCount + 1);
-  // }, []);
-
-  // const handleIncrease2 = () => {
-  //   setCount2(count2 + 1)
-  // }
-
-  // // Ví dụ cho không re render khi component ko thay đổi
-  // return (
-  //   <div>
-  //     {/* <UseMemoTest /> */}
-  //     <UseCallbackTest onIncrease={handleIncrease} />
-  //     <h1>{count}</h1>
-  //     {/* <button onClick={handleIncrease}>Click me!</button> */}
-  //   </div>
-  // );
-
-  // Ví dụ cho re render khi component nhận prop và thay đổi
-  // return (
-  //   <div>
-  //     <UseMemoTest count={count}/>
-  //     <h1>{count}</h1>
-  //     <h1>{count2}</h1>
-  //     <button onClick={handleIncrease}>Click me!</button>
-
-  //     {/* khong truyen props count2 nen ko re-render */}
-  //     <button onClick={handleIncrease2}>Click me 2!</button>
-  //   </div>
-  // )
-
-  // useMemo() Hook
-  // return <UseMemoHook />;
-  return <UseReducer />;
+  return (
+    <div>
+      <h3>Todo</h3>
+      <input
+        ref={inputRef}
+        value={job}
+        placeholder="Enter todo..."
+        onChange={(e) => {
+          dispatch(setJob(e.target.value));
+        }}
+      />
+      <button onClick={handleSubmit}>Add</button>
+      <ul>
+        {jobs.map((job, index) => (
+          <li key={index}>
+            {job}
+            <span onClick={() => dispatch(deleteJob(index))}>&times;</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default App;
