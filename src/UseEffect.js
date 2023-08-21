@@ -303,8 +303,12 @@ function UseTest() {
       console.log(detail);
     };
 
-    window.addEventListener(`lesson-2`, handleComment);
-  }, []);
+    window.addEventListener(`lesson-${lessonId}`, handleComment);
+
+    return () => {
+      window.removeEventListener(`lesson-${lessonId}`, handleComment);
+    };
+  }, [lessonId]);
   return (
     <div>
       {lessons.map((lesson) => (
