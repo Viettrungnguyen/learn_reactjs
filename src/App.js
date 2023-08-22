@@ -6,6 +6,7 @@ function App() {
     <div style={{ padding: "0 32px" }}>
       <Button primary />
       <Button />
+      <Button disable />
     </div>
   );
 }

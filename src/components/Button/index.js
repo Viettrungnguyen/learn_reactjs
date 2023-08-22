@@ -1,12 +1,13 @@
 import clsx from "clsx";
-import styles from "./Button.module.css";
+import styles from "./Button.module.scss";
 
 // dùng 2 cách dưới code sẽ dài --> nên sử dụng 1 trong 2 thư viện
 // classnames (old)
 // clsx
-function Button({ primary }) {
+function Button({ primary, disable }) {
   const classes = clsx(styles.btn, "d-flex", {
     [styles.primary]: primary,
+    [styles.disable]: disable,
   });
 
   return (
