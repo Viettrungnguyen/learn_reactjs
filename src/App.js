@@ -1,17 +1,26 @@
-import Content from "./Content";
-import { ThemeContext } from "./ThemeContext";
-import "./App.css";
-import { useContext } from "react";
+import { useStore, actions } from "./store";
 
-// Context và hook là useContext
-// Comp A => Comp B => Comp C
-// Đơn giản hoá việc truyền dữ liệu từ component cha sang component con
 function App() {
-  const context = useContext(ThemeContext);
+  const [state, dispatch] = useStore();
+  const { todos, todoInput } = state;
+
+  const handleAdd = () => {
+    dispatch(actions.addTodo(todoInput));
+  };
+
   return (
     <div style={{ padding: 20 }}>
-      <button onClick={context.toggleTheme}>Toggle theme</button>
-      <Content />
+      <input
+        value={todoInput}
+        placeholder="Enter todo..."
+        onChange={(e) => {
+          dispatch(actions.setTodoInput(e.target.value));
+        }}
+      />
+      <button onClick={handleAdd}>Add</button>
+      {todos.map((todo, index) => (
+        <li key={index}>{todo}</li>
+      ))}
     </div>
   );
 }
