@@ -1,8 +1,0 @@
-.paragraph {
-    color: red;
-}
-
-/* không sử dụng css module sẽ ảnh hưởng đến cả css của heading */
-.heading {
-    font-size: 16px;
-}
