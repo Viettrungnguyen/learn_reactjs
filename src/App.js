@@ -2,12 +2,23 @@
 // 2. App.css
 // 3. Chia component
 import "./App.css";
+import GlobalStyles from "./components/GlobalStyles";
+import Heading from "./components/Heading";
+import Paragraph from "./components/Paragraph";
 
 function App() {
   return (
-    <div style={{ padding: "0 32px" }}>
-      <h1 className="heading">CSS</h1>
-    </div>
+    <GlobalStyles>
+      <div style={{ padding: "0 32px" }}>
+        <Heading />
+        <Paragraph />
+      </div>
+
+      <div className="d-flex">
+        <div>Item 1</div>
+        <div>Item 2</div>
+      </div>
+    </GlobalStyles>
   );
 }
 
